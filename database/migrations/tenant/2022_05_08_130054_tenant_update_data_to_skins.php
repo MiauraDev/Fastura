@@ -24,6 +24,7 @@ class TenantUpdateDataToSkins extends Migration
             ->update([
                 'filename' => 'light.css'
             ]);
+            
     }
 
     /**
