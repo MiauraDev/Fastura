@@ -8,7 +8,7 @@
                 <h2>Dashboard</h2>
             </div>
         </header>
-        <div class="card mb-0">
+        <div class="dashboard-container">
             <RowTop :company="company" :utilities="utilities"></RowTop>
             <div class="row">
                 <div class="col-12">
@@ -381,7 +381,7 @@
                                 </div>
                                 <div class="card-body" v-show="!loaders.purchase">
                                     <div class="widget-summary">
-                                        <div class="widget-summary-col" v-if="general">
+                                        <div class="widget-summary-col" v-if="purchase">
                                             <div class="summary">
                                                 <div class="row no-gutters">
                                                     <div class="col-md-12 m-b-10">

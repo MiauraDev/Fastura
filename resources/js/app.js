@@ -14,6 +14,12 @@ ElementUI.Select.computed.readonly = function () {
     return !(this.filterable || this.multiple || !isIE) && !this.visible;
 };
 
+// Mantiene el wrapper del dialog fuera del contenedor de la pantalla para
+// evitar que los hover del layout underpuesto lo repinten.
+if (ElementUI.Dialog && ElementUI.Dialog.props && ElementUI.Dialog.props.appendToBody) {
+    ElementUI.Dialog.props.appendToBody.default = true;
+}
+
 export default ElementUI;
 
 Vue.use(ElementUI, { size: 'small' })

@@ -167,32 +167,20 @@ class DashboardSalePurchase
      */
     private function purchase_totals($establishment_id, $d_start, $d_end)
     {
-        /*
-        $purchases = Purchase::without(['user', 'soap_type', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'purchase_payments'])
-            ->whereIn('state_type_id', ['01','03','05','07','13'])
-            ->where('establishment_id', $establishment_id)
-            ->select('id', 'state_type_id', 'establishment_id', 'currency_type_id', 'total', 'exchange_rate_sale', 'total_perception')
-            ->get();
+        $purchases_query = Purchase::DasboardSalePurchase($establishment_id);
 
-        $purchases_total = $purchases->where('currency_type_id', 'PEN')->sum('total');
-
-        $purchase_dollr = $purchases->where('currency_type_id', 'USD');
-
-        foreach ($purchase_dollr as $pr) {
-            $purchases_total +=  $pr->total * $pr->exchange_rate_sale;
+        // La tarjeta debe respetar el periodo seleccionado, igual que las
+        // demás métricas del dashboard. Sin estas condiciones se terminaban
+        // mostrando compras fuera del periodo o ignorando compras recientes.
+        if ($d_start && $d_end) {
+            $purchases_query->whereBetween('date_of_issue', [$d_start, $d_end]);
+        } elseif ($d_start) {
+            $purchases_query->where('date_of_issue', '>=', $d_start);
+        } elseif ($d_end) {
+            $purchases_query->where('date_of_issue', '<=', $d_end);
         }
-        $purchases_total_perception = round($purchases->sum('total_perception'),2);
-        */
-         $purchases = Purchase::DasboardSalePurchase($establishment_id)->OnlyDateOfIssueByYear()->get();
-         /*
-         if(!empty($d_start)){
-             $purchases->where('date_of_issue','>=',$d_start);
-         }
-         if(!empty($d_end)){
-             $purchases->where('date_of_issue','<=',$d_end);
-         }
-         $purchases = $purchases->get();
-         */
+
+        $purchases = $purchases_query->get();
 
         $purchases_total = $purchases->sum('total_purchase');
         $purchases_total_perception = $purchases->sum('total_perception_purchase');
@@ -202,6 +190,16 @@ class DashboardSalePurchase
         $purchases_by_month = $purchases->groupBy(function($date) {
                                 return Carbon::parse($date->date_of_issue)->format('m');
                             });
+        $purchases_by_month_total = $this->arrayPurchasesbyMonth($purchases_by_month, 'total_purchase');
+        $purchases_by_month_perception = $this->arrayPurchasesbyMonth($purchases_by_month, 'total_perception_purchase');
+        $purchases_by_month_total_with_perception = [];
+
+        foreach ($purchases_by_month_total as $index => $value) {
+            $purchases_by_month_total_with_perception[$index] = round(
+                (float) $value + (float) $purchases_by_month_perception[$index],
+                2
+            );
+        }
 
 
         return [
@@ -219,7 +217,7 @@ class DashboardSalePurchase
                 'datasets' => [
                     [
                         'label' => 'Total percepciones',
-                        'data' => $this->arrayPurchasesbyMonth($purchases_by_month, 'total_perception_purchase'),
+                        'data' => $purchases_by_month_perception,
                         'backgroundColor' => 'rgb(252, 78, 75)',
                         'borderColor' => 'rgb(252, 78, 75)',
                         'borderWidth' => 1,
@@ -228,7 +226,7 @@ class DashboardSalePurchase
                     ],
                     [
                         'label' => 'Total compras',
-                        'data' => $this->arrayPurchasesbyMonth($purchases_by_month, 'total_purchase'),
+                        'data' => $purchases_by_month_total,
                         'backgroundColor' => 'rgb(20, 120, 250)',
                         'borderColor' => 'rgb(20, 120, 250)',
                         'borderWidth' => 1,
@@ -237,7 +235,7 @@ class DashboardSalePurchase
                     ],
                     [
                         'label' => 'Total',
-                        'data' => $data_array,
+                        'data' => $purchases_by_month_total_with_perception,
                         'backgroundColor' => 'rgb(177, 184, 194)',
                         'borderColor' => 'rgb(177, 184, 194)',
                         'borderWidth' => 1,

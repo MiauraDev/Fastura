@@ -4,11 +4,17 @@
     $path[1] = (array_key_exists(1, $path)> 0)?$path[1]:'';
     $path[2] = (array_key_exists(2, $path)> 0)?$path[2]:'';
     $path[0] = ($path[0] === '')?'documents':$path[0];
-    $visual->sidebar_theme = property_exists($visual, 'sidebar_theme')?$visual->sidebar_theme:''
+    $visual->sidebar_theme = property_exists($visual, 'sidebar_theme')?$visual->sidebar_theme:'';
+
+    $skinFilename = $vc_compact_sidebar->skin ? $vc_compact_sidebar->skin->filename : '';
+    $skinClass = $skinFilename
+        ? 'skin-'.preg_replace('/[^a-z0-9]+/', '-', strtolower(pathinfo($skinFilename, PATHINFO_FILENAME)))
+        : '';
 @endphp
 <html
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     class="fixed no-mobile-device custom-scroll
+        {{ $skinClass }}
         sidebar-{{$visual->sidebar_theme ?? ''}}
         {{ ($visual->sidebar_theme == 'white'
         || $visual->sidebar_theme == 'gray'
@@ -79,12 +85,13 @@
 
     @if($vc_compact_sidebar->skin)
         @if (file_exists(storage_path('app/public/skins/'.$vc_compact_sidebar->skin->filename)))
-            <link rel="stylesheet" href="{{ asset('storage/skins/'.$vc_compact_sidebar->skin->filename) }}" />
+            <link rel="stylesheet" href="{{ asset('storage/skins/'.$vc_compact_sidebar->skin->filename) }}?v={{ filemtime(storage_path('app/public/skins/'.$vc_compact_sidebar->skin->filename)) }}" />
         @endif
     @endif
 
-
     @stack('styles')
+
+    <link rel="stylesheet" href="{{ asset('porto-light/css/mode-adaptation.css') }}?v={{ filemtime(public_path('porto-light/css/mode-adaptation.css')) }}" />
 
 
     <script src="{{ asset('porto-light/vendor/modernizr/modernizr.js') }}"></script>

@@ -16,7 +16,7 @@ class TenantConfigDefaultToConfigurations extends Migration
         DB::table('configurations')
             ->where('id', '1')
             ->update([
-                'skin_id' => 2
+                'skin_id' => 1
             ]);
     }
 

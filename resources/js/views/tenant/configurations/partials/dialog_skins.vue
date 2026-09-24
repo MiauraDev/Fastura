@@ -5,10 +5,12 @@
       <el-table-column prop="filename" label="Archivo" width="150"></el-table-column>
       <el-table-column prop="" label="Acciones" width="100">
         <template slot-scope="scope">
-          <a class="btn btn-info btn-sm" :href="'/storage/skins/'+scope.row.filename" target="BLANK">
+          <a class="btn btn-info btn-sm"
+             :href="'/configurations/visual/download_skin/'+scope.row.id"
+             :download="scope.row.filename">
             <i class="fas fa-download"></i>
           </a>
-          <button v-if="scope.$index > 1" class="btn btn-sm btn-danger" @click.native.prevent="deleteSkin(scope.$index)">
+          <button v-if="scope.row.name !== 'Default' && skins.length > 1" type="button" class="btn btn-sm btn-danger" @click="deleteSkin(scope.row.id)">
             <i class="fas fa-trash"></i>
           </button>
         </template>
@@ -20,6 +22,7 @@
       :on-remove="handleRemove"
       class="upload-demo pt-3"
       ref="upload"
+      accept=".css,text/css"
       :action="`/configurations/visual/upload_skin`"
       :show-file-list="true"
       :on-success="onSuccess"
@@ -61,7 +64,10 @@
       },
       errorUpload(error)
       {
-          this.$message({message: 'Error al subir el archivo', type: 'error'})
+          const message = error && error.message
+              ? error.message
+              : 'Error al subir el archivo';
+          this.$message({message: message, type: 'error'});
       },
       onSuccess(response, file, fileList) {
         this.fileList = fileList
@@ -70,7 +76,7 @@
           this.$message.success(response.message)
           if (response.skins !== undefined) {
             this.skins = response.skins;
-            this.$emit("update:skins", response.skins);
+            this.$emit("update:skins", response.skins, response.skin_id);
           }
         } else {
           this.cleanFileList()
@@ -81,9 +87,9 @@
       cleanFileList(){
         this.fileList = []
       },
-      deleteSkin(index) {
-        this.form.id = this.skins[index].id;
-        this.$http.post(`configurations/visual/delete_skin`, this.form).then(response => {
+      deleteSkin(id) {
+        this.form.id = id;
+        this.$http.post(`/configurations/visual/delete_skin`, this.form).then(response => {
           let data = response.data;
           if (data.success) {
             this.$message.success(data.message);
@@ -92,7 +98,7 @@
           }
           if (data !== undefined && data.skins !== undefined) {
             this.skins = data.skins;
-            this.$emit("update:skins", data.skins);
+            this.$emit("update:skins", data.skins, data.skin_id);
           }
 
         }).catch(error => {

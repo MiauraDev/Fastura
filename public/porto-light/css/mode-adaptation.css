@@ -1,0 +1,401 @@
+/* Adaptación global del modo noche para cualquier skin cargado por el tenant.
+   Solo cambia superficies, textos y controles; no radios ni espaciados. */
+
+html.dark body,
+html.dark .body,
+html.dark .inner-wrapper,
+html.dark .content-body,
+html.dark .content-body-r {
+    background-color: var(--app-dark-bg, #202124) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .header {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .header .logo-container,
+html.dark .header .header-right,
+html.dark .header .notification-icon,
+html.dark .header .userbox,
+html.dark .header .profile-info {
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .header .separator {
+    background-color: var(--app-dark-border, #45484d) !important;
+}
+
+html.dark .page-header {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    box-shadow: none !important;
+}
+
+html.dark .sidebar-toggle {
+    border-color: var(--app-dark-border, #45484d) !important;
+}
+
+html.dark.fixed .sidebar-left,
+html.dark.fixed .sidebar-header,
+html.dark.fixed .sidebar-left .nano,
+html.dark.fixed .sidebar-left .nano-content {
+    background-color: var(--app-dark-bg, #202124) !important;
+}
+
+html.dark.fixed .sidebar-left .nav-main,
+html.dark.fixed .sidebar-left .nav-main a,
+html.dark.fixed .sidebar-left .nav-main a span,
+html.dark.fixed .sidebar-left .nav-main svg {
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark.fixed .sidebar-left .nav-main a:hover,
+html.dark.fixed .sidebar-left .nav-main a:focus,
+html.dark.fixed .sidebar-left .nav-main a:active,
+html.dark.fixed .sidebar-left .nav-main a:hover span,
+html.dark.fixed .sidebar-left .nav-main a:focus span,
+html.dark.fixed .sidebar-left .nav-main a:active span {
+    color: #ffffff !important;
+}
+
+html.dark.fixed .sidebar-left .nav-main li .nav-children {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+}
+
+html.dark .nav-main li.nav-expanded > a,
+html.dark .nav-main li .nav-children li a:hover {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+}
+
+html.dark.fixed .sidebar-left .nav-main a::before,
+html.dark.fixed .sidebar-left .nav-main a::after {
+    color: var(--app-dark-text, #f5f5f5) !important;
+    border-color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .page-header,
+html.dark .page-header h1,
+html.dark .page-header h2,
+html.dark .page-header h3,
+html.dark .page-header h4,
+html.dark .page-header h5,
+html.dark .page-header h6,
+html.dark .content-body h1,
+html.dark .content-body h2,
+html.dark .content-body h3,
+html.dark .content-body h4,
+html.dark .content-body h5,
+html.dark .content-body h6,
+html.dark .content-body label,
+html.dark .content-body .control-label,
+html.dark .content-body .form-control-label {
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .card,
+html.dark .card-body,
+html.dark .card-header,
+html.dark .modal-content,
+html.dark .el-dialog,
+html.dark .dropdown-menu {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-table,
+html.dark .el-table__expanded-cell,
+html.dark .el-table th,
+html.dark .el-table td,
+html.dark .table thead th,
+html.dark .table tbody td,
+html.dark .table tfoot td {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-table--enable-row-hover .el-table__body tr:hover > td {
+    background-color: var(--app-dark-hover, #35383d) !important;
+}
+
+html.dark .form-control,
+html.dark .el-input__inner,
+html.dark .el-textarea__inner,
+html.dark select,
+html.dark input:not([type="checkbox"]):not([type="radio"]) {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-input-border, #54585e) !important;
+    color: #ffffff !important;
+}
+
+html.dark .form-control::placeholder,
+html.dark .el-input__inner::placeholder,
+html.dark .el-textarea__inner::placeholder {
+    color: var(--app-dark-placeholder, #aeb2b8) !important;
+}
+
+html.dark .text-muted,
+html.dark .text-secondary,
+html.dark .text-muted * {
+    color: var(--app-dark-muted, #c5c7cb) !important;
+}
+
+html.dark.sidebar-dark .el-button--primary:hover,
+html.dark.sidebar-dark .btn-custom:hover {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+}
+
+html.dark .style-switcher,
+html.dark .style-switcher .style-switcher-open,
+html.dark .style-switcher h4 {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+/* =========================================================
+   Element UI y estados de navegación en modo noche
+   ========================================================= */
+
+html.dark .el-tabs__item {
+    color: var(--app-dark-muted, #c5c7cb) !important;
+}
+
+html.dark .el-tabs__item:hover,
+html.dark .el-tabs__item:focus {
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-tabs__item.is-active {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-top-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+/* Bocado mantiene su acento rojo en las pestañas activas. */
+html.dark.skin-bocado .el-tabs__item.is-active {
+    background-color: var(--bocado-primary, #cc0033) !important;
+    border-top-color: var(--bocado-primary, #cc0033) !important;
+    color: #ffffff !important;
+}
+
+html.dark .el-pagination .btn-prev,
+html.dark .el-pagination .btn-next,
+html.dark .el-pagination button {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-pagination .btn-prev:hover,
+html.dark .el-pagination .btn-next:hover,
+html.dark .el-pagination .btn-prev:focus,
+html.dark .el-pagination .btn-next:focus {
+    background-color: var(--app-dark-hover, #35383d) !important;
+    border-color: var(--bocado-primary, #45484d) !important;
+    color: #ffffff !important;
+}
+
+html.dark .el-pagination .btn-prev:disabled,
+html.dark .el-pagination .btn-next:disabled {
+    background-color: var(--app-dark-bg, #202124) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-muted, #aeb2b8) !important;
+}
+
+html.dark .el-pagination .btn-prev i,
+html.dark .el-pagination .btn-next i,
+html.dark .el-pagination .btn-prev span,
+html.dark .el-pagination .btn-next span {
+    color: inherit !important;
+}
+
+/* Evitar el azul oscuro de la regla base del tema en Bocado. */
+html.dark.skin-bocado ul.nav-main li.nav-expanded > a,
+html.dark.skin-bocado ul.nav-main li .nav-children li a:hover,
+html.dark.skin-bocado ul.nav-main li .nav-children li a:focus {
+    background-color: var(--bocado-primary, #cc0033) !important;
+    color: #ffffff !important;
+}
+
+html.dark.skin-bocado ul.nav-main li .nav-children li a:hover,
+html.dark.skin-bocado ul.nav-main li .nav-children li a:focus {
+    background-color: var(--bocado-primary-dark, #c10016) !important;
+}
+
+html.dark.skin-bocado ul.nav-main li .nav-children li a,
+html.dark.skin-bocado ul.nav-main li .nav-children li a span,
+html.dark.skin-bocado ul.nav-main li .nav-children li a svg,
+html.dark.skin-bocado ul.nav-main li .nav-children li a i {
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   Element UI collapse y superficies de documentos
+   ========================================================= */
+
+html.dark .el-collapse,
+html.dark .el-collapse-item__header,
+html.dark .el-collapse-item__wrap,
+html.dark .el-collapse-item__content {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-collapse-item__header:hover,
+html.dark .el-collapse-item__header:focus,
+html.dark .el-collapse-item__header.is-active {
+    background-color: var(--app-dark-hover, #35383d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-collapse-item__arrow {
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-collapse-item__wrap .border-top,
+html.dark .el-collapse-item__content .border-top {
+    border-color: var(--app-dark-border, #45484d) !important;
+}
+
+html.dark .el-collapse-item__content .table,
+html.dark .el-collapse-item__content .table td,
+html.dark .el-collapse-item__content .table th {
+    background-color: transparent !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark.skin-bocado .el-collapse-item__header.is-active {
+    background-color: var(--bocado-primary, #cc0033) !important;
+    color: #ffffff !important;
+}
+
+/* El estilo inline blanco de las cabeceras de documentos se sustituye por una clase. */
+html:not(.dark) .document-form-header {
+    background-color: #ffffff !important;
+}
+
+html.dark .document-form-header {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+/* =========================================================
+   Adaptación de superficies del POS
+   ========================================================= */
+
+html.dark .bg-white {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .bg-light {
+    background-color: var(--app-dark-bg, #202124) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .pos-list-items,
+html.dark .pos-list-items td {
+    background-color: transparent !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .pos-list-items tr:hover td {
+    background-color: var(--app-dark-hover, #35383d) !important;
+}
+
+html.dark .btn-default,
+html.dark .btn-secondary {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .btn-default:hover,
+html.dark .btn-default:focus,
+html.dark .btn-secondary:hover,
+html.dark .btn-secondary:focus {
+    background-color: var(--app-dark-hover, #35383d) !important;
+    border-color: var(--bocado-primary, #45484d) !important;
+    color: #ffffff !important;
+}
+
+html.dark .el-input-group__append,
+html.dark .el-input-group__prepend {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-input-border, #54585e) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-select-dropdown,
+html.dark .el-dropdown-menu {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-select-dropdown__item {
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-select-dropdown__item.hover,
+html.dark .el-select-dropdown__item:hover {
+    background-color: var(--app-dark-hover, #35383d) !important;
+    color: #ffffff !important;
+}
+
+html.dark .el-radio-button__inner {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    box-shadow: -1px 0 0 0 var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+    background-color: var(--bocado-primary, #cc0033) !important;
+    border-color: var(--bocado-primary, #cc0033) !important;
+    box-shadow: -1px 0 0 0 var(--bocado-primary, #cc0033) !important;
+    color: #ffffff !important;
+}
+
+html.dark .el-pagination .el-pager li {
+    background-color: var(--app-dark-surface, #2b2d31) !important;
+    border-color: var(--app-dark-border, #45484d) !important;
+    color: var(--app-dark-text, #f5f5f5) !important;
+}
+
+html.dark .el-pagination .el-pager li:hover {
+    color: #ffffff !important;
+}
+
+html.dark.skin-bocado .el-pagination .el-pager li.active {
+    background-color: var(--bocado-primary, #cc0033) !important;
+    border-color: var(--bocado-primary, #cc0033) !important;
+    color: #ffffff !important;
+}
+
+html.skin-bocado .btn-primary,
+html.skin-bocado .btn-primary-pos {
+    background-color: var(--bocado-primary, #cc0033) !important;
+    border-color: var(--bocado-primary, #cc0033) !important;
+    color: #ffffff !important;
+}
+
+html.skin-bocado .btn-primary:hover,
+html.skin-bocado .btn-primary:focus,
+html.skin-bocado .btn-primary-pos:hover,
+html.skin-bocado .btn-primary-pos:focus {
+    background-color: var(--bocado-primary-dark, #c10016) !important;
+    border-color: var(--bocado-primary-dark, #c10016) !important;
+    color: #ffffff !important;
+}
+
+

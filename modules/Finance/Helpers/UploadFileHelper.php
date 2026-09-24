@@ -219,9 +219,24 @@ class UploadFileHelper
     {
         $error_message = 'Tipo de archivo no permitido';
 
-        self::checkIfAllowedExtension($filename, $mimes);
+        self::checkIfAllowedExtension(strtolower($filename), $mimes);
 
-        if (!in_array(mime_content_type($temp_path), $allowed_file_types, true)) self::notAllowedFile($error_message);
+        // mime_content_type() puede identificar incorrectamente un archivo CSS
+        // como text/x-asm en Windows, por lo que la extensión .css y el
+        // contenido textual son la validación principal para este tipo de archivo.
+        $content = file_get_contents($temp_path);
+        if ($content === false || strpos($content, "\0") !== false) {
+            self::notAllowedFile($error_message);
+        }
+
+        $hasMimeTypeDetector = function_exists('mime_content_type');
+        $detected_mime = $hasMimeTypeDetector ? mime_content_type($temp_path) : null;
+        $is_text_file = !$hasMimeTypeDetector || (is_string($detected_mime) && strpos($detected_mime, 'text/') === 0);
+        $is_allowed_mime = in_array($detected_mime, $allowed_file_types, true);
+
+        if (!$is_allowed_mime && !$is_text_file) {
+            self::notAllowedFile($error_message);
+        }
     }
     
 

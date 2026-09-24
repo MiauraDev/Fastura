@@ -1,6 +1,6 @@
 <template>
-  <div class="row text-center">
-    <div class="col-6 col-md-2" v-if="company.certificate_due">
+  <div class="row text-center dashboard-summary-row">
+    <div class="dashboard-summary-item col-12 col-sm-6 col-md-4 col-lg" v-if="company.certificate_due">
       <div class="card card-dashboard">
         <div
           class="card-body border border-success"
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="col-6 col-md-2">
+    <div class="dashboard-summary-item col-12 col-sm-6 col-md-4 col-lg">
       <div class="card card-dashboard">
         <div class="card-body border">
           <div class="card-title">Cantidad <br />CPE Emitidos</div>
@@ -23,15 +23,15 @@
         </div>
       </div>
     </div>
-    <div class="col-6 col-md-2">
-      <div class="card card-dashboard border">
-        <div class="card-body">
+    <div class="dashboard-summary-item col-12 col-sm-6 col-md-4 col-lg">
+      <div class="card card-dashboard">
+        <div class="card-body border">
           <div class="card-title">Monto total <br />comprobantes</div>
           <span class="font-weight-bold">{{ document_total_global }}</span>
         </div>
       </div>
     </div>
-    <div class="col-6 col-md-2">
+    <div class="dashboard-summary-item col-12 col-sm-6 col-md-4 col-lg">
       <div class="card card-dashboard">
         <div class="card-body border">
           <div class="card-title">Monto total notas <br />de ventas</div>
@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div class="col-6 col-md-2">
+    <div class="dashboard-summary-item col-12 col-sm-6 col-md-4 col-lg">
       <div class="card card-dashboard">
         <div class="card-body border">
           <div class="card-title">Monto total <br />general</div>
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="col-6 col-md-2" v-if="utilities.totals">
+    <div class="dashboard-summary-item col-12 col-sm-6 col-md-4 col-lg" v-if="utilities.totals">
       <div class="card card-dashboard">
         <div class="card-body border">
           <div class="card-title">Utitlidad <br />neta</div>
@@ -102,6 +102,19 @@ export default {
 };
 </script>
 <style>
+.dashboard-summary-row {
+  margin-bottom: 20px;
+}
+
+.dashboard-summary-item {
+  min-width: 0;
+}
+
+.dashboard-summary-item > .card-dashboard {
+  height: 100%;
+  margin-bottom: 0;
+}
+
 .card-green {
   background-color: green;
   color: white;

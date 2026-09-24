@@ -18,13 +18,6 @@ class TenantUpdateDataToSkins extends Migration
             ->update([
                 'filename' => 'default.css'
             ]);
-
-        DB::table('skins')
-            ->where('name', 'Light')
-            ->update([
-                'filename' => 'light.css'
-            ]);
-            
     }
 
     /**

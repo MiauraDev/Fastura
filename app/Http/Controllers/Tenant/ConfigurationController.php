@@ -491,7 +491,8 @@ class ConfigurationController extends Controller
     {
         $configuration = Configuration::first();
         $visual = $configuration->visual;
-        $visual->sidebar_theme = $visual->bg === 'dark' ? 'white' : 'dark';
+        // El modo noche solo cambia el fondo y los textos necesarios.
+        // No debe reemplazar la clase de color del sidebar ni el tema activo.
         $visual->bg = $visual->bg === 'dark' ? 'white' : 'dark';
         $configuration->visual = $visual;
         $configuration->save();
@@ -548,70 +549,159 @@ class ConfigurationController extends Controller
 
     public function visualUploadSkin(Request $request)
     {
-        if ($request->file->getClientMimeType() != 'text/css') {
+        if (!$request->hasFile('file')) {
             return [
                 'success' => false,
-                'message' =>  'Tipo de archivo no permitido',
+                'message' => 'Seleccione un archivo CSS',
             ];
         }
-        if (Storage::disk('public')->exists('skins'.DIRECTORY_SEPARATOR.$request->file->getClientOriginalName())) {
+
+        $file = $request->file('file');
+        $originalFilename = basename($file->getClientOriginalName());
+        $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION));
+
+        if ($extension !== 'css') {
             return [
                 'success' => false,
-                'message' =>  'Archivo ya existe',
+                'message' => 'Tipo de archivo no permitido',
             ];
         }
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-
-            $file_content = file_get_contents($file->getRealPath());
-            $filename = $file->getClientOriginalName();
-            $name = pathinfo($file->getClientOriginalName());
-
-            UploadFileHelper::checkIfValidCssFile($filename, $file->getPathName(), 'css', ['text/css', 'text/plain']);
-
-            Storage::disk('public')->put('skins'.DIRECTORY_SEPARATOR.$filename, $file_content);
-
-            $skin = new Skin;
-            $skin->filename = $filename;
-            $skin->name = $name['filename'];
-            $skin->save();
-
-            $skins = Skin::all();
+        // Conserva únicamente caracteres seguros para evitar que el nombre
+        // enviado por el cliente se convierta en una ruta dentro del disco.
+        $filename = preg_replace('/[^A-Za-z0-9._-]/', '_', $originalFilename);
+        if (!$filename) {
             return [
-                'success' => true,
-                'message' =>  'Archivo cargado exitosamente',
-                'skins' => $skins
+                'success' => false,
+                'message' => 'El nombre del archivo no es válido',
             ];
         }
+
+        $skinPath = 'skins/'.$filename;
+        if (Storage::disk('public')->exists($skinPath) || Skin::where('filename', $filename)->exists()) {
+            return [
+                'success' => false,
+                'message' => 'Archivo ya existe',
+            ];
+        }
+
+        try {
+            // No se usa getClientMimeType() como única validación: el MIME
+            // enviado por el navegador y mime_content_type() no son fiables
+            // para CSS en todos los sistemas operativos.
+            UploadFileHelper::checkIfValidCssFile(
+                $filename,
+                $file->getPathName(),
+                'css',
+                ['text/css', 'text/plain']
+            );
+        } catch (\Exception $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ];
+        }
+
+        $fileContent = file_get_contents($file->getRealPath());
+        if ($fileContent === false || trim($fileContent) === '') {
+            return [
+                'success' => false,
+                'message' => 'El archivo CSS está vacío o no se pudo leer',
+            ];
+        }
+
+        if (!Storage::disk('public')->put($skinPath, $fileContent)) {
+            return [
+                'success' => false,
+                'message' => 'No se pudo guardar el tema',
+            ];
+        }
+
+        $skin = new Skin;
+        $skin->filename = $filename;
+        $skin->name = pathinfo($filename, PATHINFO_FILENAME);
+        $skin->save();
+
         return [
-            'success' => false,
-            'message' =>  __('app.actions.upload.error'),
+            'success' => true,
+            'message' => 'Archivo cargado exitosamente',
+            'skins' => Skin::all()
         ];
     }
 
     public function visualDeleteSkin(Request $request)
     {
-        $config = Configuration::first();
-        if($config->skin_id == $request->id) {
+        $skin = Skin::find($request->input('id'));
+        if (!$skin) {
             return [
                 'success' => false,
-                'message' => 'No se puede eliminar el Tema actual'
+                'message' => 'El tema no existe',
             ];
         }
 
+        $isDefaultSkin = strcasecmp((string) $skin->name, 'Default') === 0
+            || strcasecmp((string) $skin->filename, 'default.css') === 0
+            || strcasecmp((string) $skin->filename, 'default') === 0;
 
-        $skin = Skin::find($request->id);
-        Storage::disk('public')->delete('skins'.DIRECTORY_SEPARATOR.$skin->filename);
+        if ($isDefaultSkin) {
+            return [
+                'success' => false,
+                'message' => 'No se puede eliminar el tema por defecto',
+            ];
+        }
+
+        $otherSkins = Skin::where('id', '!=', $skin->id)->orderBy('id')->get();
+        if ($otherSkins->isEmpty()) {
+            return [
+                'success' => false,
+                'message' => 'No se puede eliminar el último tema',
+            ];
+        }
+
+        $configuration = Configuration::first();
+        $switchedSkin = false;
+        $fallbackSkin = null;
+
+        // Si se elimina el tema activo, se selecciona otro tema para no dejar
+        // la configuración apuntando a un registro que ya no existe.
+        if ($configuration && (int) $configuration->skin_id === (int) $skin->id) {
+            $fallbackSkin = $otherSkins->first(function ($candidate) {
+                return Storage::disk('public')->exists('skins/'.$candidate->filename);
+            }) ?: $otherSkins->first();
+
+            $configuration->skin_id = $fallbackSkin->id;
+            $configuration->save();
+            $switchedSkin = true;
+        }
+
+        Storage::disk('public')->delete('skins/'.$skin->filename);
         $skin->delete();
 
-        $skins = Skin::all();
+        $message = 'Tema eliminado correctamente';
+        if ($switchedSkin) {
+            $message .= '. Se aplicó el tema '.$fallbackSkin->name;
+        }
 
         return [
             'success' => true,
-            'message' =>  'Tema eliminado correctamente',
-            'skins' => $skins
+            'message' => $message,
+            'skins' => Skin::all(),
+            'skin_id' => $configuration ? $configuration->skin_id : null
         ];
+    }
+
+    public function visualDownloadSkin($skin)
+    {
+        $skin = Skin::findOrFail($skin);
+        $skinPath = 'skins/'.$skin->filename;
+
+        if (!Storage::disk('public')->exists($skinPath)) {
+            abort(404, 'El archivo del tema no existe');
+        }
+
+        return Storage::disk('public')->download($skinPath, $skin->filename, [
+            'Content-Type' => 'text/css',
+        ]);
     }
 
 

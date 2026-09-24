@@ -36,20 +36,6 @@
 
 
                 <div class="pt-3">
-                    <h5>Color de fondo del sidebar</h5>
-                    <div class="form-group el-custom-control">
-                        <button :class="{ 'active': visuals.sidebar_theme === 'white' }" type="button" @click="onChangeBgSidebar('white')" class="btn" style="background-color: #ffffff;"></button>
-                        <button :class="{ 'active': visuals.sidebar_theme === 'blue' }" type="button" @click="onChangeBgSidebar('blue')" class="btn" style="background-color: #7367f0;"></button>
-                        <!-- <button :class="{ 'active': visuals.sidebar_theme === 'gray' }" type="button" @click="onChangeBgSidebar('gray')" class="btn" style="background-color: #82868b;"></button> -->
-                        <button :class="{ 'active': visuals.sidebar_theme === 'green' }" type="button" @click="onChangeBgSidebar('green')" class="btn" style="background-color: #28c76f;"></button>
-                        <button :class="{ 'active': visuals.sidebar_theme === 'red' }" type="button" @click="onChangeBgSidebar('red')" class="btn" style="background-color: #ea5455;"></button>
-                        <!-- <button :class="{ 'active': visuals.sidebar_theme === 'warning' }" type="button" @click="onChangeBgSidebar('warning')" class="btn" style="background-color: #ff9f43;"></button> -->
-                        <!-- <button :class="{ 'active': visuals.sidebar_theme === 'ligth-blue' }" type="button" @click="onChangeBgSidebar('ligth-blue')" class="btn" style="background-color: #00cfe8;"></button> -->
-                        <button :class="{ 'active': visuals.sidebar_theme === 'dark' }" type="button" @click="onChangeBgSidebar('dark')" class="btn" style="background-color: #283046;"></button>
-                    </div>
-                </div>
-
-                <div class="pt-3">
                     <h5>Menú lateral contraído</h5>
                     <div :class="{'has-danger': errors.compact_sidebar}">
                         <el-switch
@@ -98,7 +84,7 @@
 
             </div>
         </form>
-        <dialog-skins :showDialog.sync="dialogSkinsVisible" :skins.sync="skins"/>
+        <dialog-skins :showDialog.sync="dialogSkinsVisible" :skins="skins" @update:skins="updateSkins"/>
     </div>
 </template>
 
@@ -125,10 +111,6 @@
             await this.getRecords()
         },
         methods: {
-            onChangeBgSidebar(theme) {
-                this.visuals.sidebar_theme = theme;
-                this.submit();
-            },
             initForm() {
                 this.errors = {}
                 this.form = {
@@ -190,27 +172,17 @@
                     this.loading_submit = false;
                 });
             },
+            updateSkins(skins, activeSkinId) {
+                this.skins = skins;
+                if (activeSkinId !== undefined) {
+                    this.form.skin_id = activeSkinId;
+                } else if (Array.isArray(skins) && !skins.some(skin => String(skin.id) === String(this.form.skin_id))) {
+                    this.form.skin_id = skins.length ? skins[0].id : null;
+                }
+            },
             dialogSkins() {
                 this.dialogSkinsVisible = true
             },
         }
     }
 </script>
-<style scoped lang=scss>
-.el-custom-control{
-    display: flex;
-    align-content: center;
-    .btn{
-        margin-right: .5rem;
-        $size: 20px;
-        width: $size;
-        height: $size;
-        border-radius: 2px;
-        border: 1px solid #f6f6f6;
-        padding: 0;
-        &.active{
-            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, .5);
-        }
-    }
-}
-</style>

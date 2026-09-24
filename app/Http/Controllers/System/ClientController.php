@@ -700,7 +700,7 @@
                     'sidebars' => 'light',
                     'sidebar_theme' => 'white'
                 ]),
-                'skin_id' => 2,
+                'skin_id' => 1,
                 'top_menu_a_id' => 1,
                 'top_menu_b_id' => 15,
                 'top_menu_c_id' => 76,

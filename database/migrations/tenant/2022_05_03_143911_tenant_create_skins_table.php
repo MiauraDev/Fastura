@@ -23,7 +23,6 @@ class TenantCreateSkinsTable extends Migration
 
         DB::table('skins')->insert([
             ['name' => 'Default', 'filename' => 'default'],
-            ['name' => 'Light', 'filename' => 'fastura.css'],
         ]);
 
         Schema::table('configurations', function (Blueprint $table) {
