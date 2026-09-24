@@ -37,3 +37,32 @@ public/porto-light/js/bloquear_cliente.js
 supervisor.conf
 
 /node_modules_BK
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+!.env.dusk.example
+
+# Cryptographic keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+
+# Database backups and local exports
+*.sql
+*.sql.gz
+*.sqlite
+*.sqlite3
+*.dump
+
+# Runtime and editor artifacts
+*.log
+*.bak
+*.swp
+*~
